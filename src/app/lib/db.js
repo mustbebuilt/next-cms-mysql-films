@@ -63,6 +63,16 @@ const searchFilms = async (searchTerm) => {
   }
 };
 
+const randomFilm = async () => {
+  try {
+    const data = await sql`SELECT * FROM films ORDER BY RANDOM() LIMIT 1`;
+    return data.rows[0];
+  } catch (error) {
+    console.error("Database Error:", error);
+    throw new Error("Failed to fetch random films.");
+  }
+};
+
 const insertContactRequest = async (formData) => {
   try {
     // destructuring not supported for formData
@@ -92,5 +102,6 @@ export {
   fetchFilm,
   fetchLatestFilms,
   searchFilms,
+  randomFilm,
   insertContactRequest,
 };

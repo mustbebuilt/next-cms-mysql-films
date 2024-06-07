@@ -87,6 +87,10 @@ header>.div:last-child {
 .filmDetails>div {
     padding: 0 20px 0 0;
 }
+.filmDetails>div>img{
+    border:1px solid #000;
+    padding:2px;
+}
 
 .sideBar {
     padding: 5px;

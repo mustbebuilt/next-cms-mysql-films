@@ -1,3 +1,4 @@
+import Sidebar from "@/app/components/Sidebar";
 import { fetchFilm } from "@/app/lib/db";
 
 // generate dynamic metadata
@@ -25,6 +26,7 @@ const CatalogueItem = async ({ params }) => {
             <p>{film.film_certificate}</p>
           </div>
         </div>
+        <Sidebar />
       </section>
     </main>
   );
