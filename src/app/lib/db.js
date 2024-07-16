@@ -1,26 +1,43 @@
-"use server";
-import { sql } from "@vercel/postgres";
+import mysql from "mysql2/promise";
 import { unstable_noStore as noStore } from "next/cache";
-import { redirect } from "next/navigation";
+
+// connect to the database
+const pool = mysql.createPool({
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASS,
+  database: process.env.DB_SCHEMA,
+  waitForConnections: true,
+});
 
 const fetchFilms = async () => {
   // Add noStore() here to prevent the response from being cached.
   // This is equivalent to in fetch(..., {cache: 'no-store'}).
   noStore();
   try {
-    const data = await sql`SELECT * FROM films`;
-    return data.rows;
+    const db = await pool.getConnection();
+    const query = "select * from films";
+    const [rows] = await db.execute(query);
+    db.release();
+    return rows;
   } catch (error) {
     console.error("Database Error:", error);
-    throw new Error("Failed to fetch revenue data.");
+    throw new Error("Failed to fetch data.");
   }
 };
 
 const fetchLatestFilms = async () => {
   try {
-    const data =
-      await sql`SELECT * FROM films ORDER BY film_releasedate DESC LIMIT 6`;
-    return data.rows;
+    // const data =
+    //   await sql`SELECT * FROM films ORDER BY film_releasedate DESC LIMIT 6`;
+    // return data.rows;
+    const db = await pool.getConnection();
+    const query = "SELECT * FROM films ORDER BY film_release_date DESC LIMIT 6";
+    const [rows] = await db.execute(query);
+    db.release();
+    return rows;
+
+
   } catch (error) {
     console.error("Database Error:", error);
     throw new Error("Failed to fetch latest data.");
@@ -28,80 +45,72 @@ const fetchLatestFilms = async () => {
 };
 
 const fetchFilm = async (film_id) => {
-  // Add noStore() here to prevent the response from being cached.
-  // This is equivalent to in fetch(..., {cache: 'no-store'}).
+  // Prevent the response from being cached.
   noStore();
+  let db;
   try {
     // Fetch the film data by film_id
-    const data = await sql`SELECT * FROM films WHERE film_id = ${film_id}`;
-
-    if (data.rows.length === 0) {
+    db = await pool.getConnection();
+    const query = `SELECT * FROM films WHERE film_id = ?`;
+    const [rows] = await db.execute(query, [film_id]);
+    if (rows.length === 0) {
       throw new Error("Film not found");
     }
-
-    return data.rows[0];
+    return rows[0]; // Return the first (and only) result
   } catch (error) {
     console.error("Database Error:", error);
     throw new Error("Failed to fetch film data.");
+  } finally {
+    if (db) {
+      db.release(); // Ensure the connection is released
+    }
   }
 };
 
 const searchFilms = async (searchTerm) => {
+  // Prevent the response from being cached.
+  noStore();
+  let db;
   try {
     const searchPattern = `%${searchTerm}%`;
-    const data = await sql`
+    db = await pool.getConnection();
+    const query = `
       SELECT * FROM films
-      WHERE film_title ILIKE ${searchPattern}
-         OR film_certificate ILIKE ${searchPattern}
-         OR film_description ILIKE ${searchPattern}
-      ORDER BY film_releasedate DESC
+      WHERE film_title LIKE ?
+         OR film_certificate LIKE ?
+         OR film_description LIKE ?
+      ORDER BY film_release_date DESC
     `;
-    return data.rows;
+    const [rows] = await db.execute(query, [searchPattern, searchPattern, searchPattern]);
+    if (rows.length === 0) {
+      throw new Error("No films found");
+    }
+    return rows; // Return all matching results
   } catch (error) {
     console.error("Database Error:", error);
-    throw new Error("Failed to fetch search results.");
+    throw new Error("Failed to fetch film data.");
+  } finally {
+    if (db) {
+      db.release(); // Ensure the connection is released
+    }
   }
 };
 
+
+
 const randomFilm = async () => {
   try {
-    const data = await sql`SELECT * FROM films ORDER BY RANDOM() LIMIT 1`;
-    return data.rows[0];
+    // const data = await sql`SELECT * FROM films ORDER BY RANDOM() LIMIT 1`;
+    const db = await pool.getConnection();
+    const query = "SELECT * FROM films ORDER BY RAND() LIMIT 1";
+    const [rows] = await db.execute(query);
+    return rows[0];
   } catch (error) {
     console.error("Database Error:", error);
     throw new Error("Failed to fetch random films.");
   }
 };
 
-const insertContactRequest = async (formData) => {
-  try {
-    // destructuring not supported for formData
-    const firstname = formData.get("firstname");
-    const lastname = formData.get("lastname");
-    const email = formData.get("email");
-    const tel = formData.get("tel");
-    const marketing = formData.get("marketing");
-    await sql`
-      INSERT INTO contact_requests
-        (first_name, last_name, email, tel, marketing)
-      VALUES
-        (${firstname}, ${lastname}, ${email}, ${tel}, ${marketing})
-    `;
 
-    // return { success: true };
-  } catch (error) {
-    console.error("Database Error:", error);
-    throw new Error("Failed to insert contact request.");
-  } finally {
-    redirect("/thankyou");
-  }
-};
 
-export {
-  fetchFilms,
-  fetchFilm,
-  fetchLatestFilms,
-  searchFilms,
-  randomFilm,
-  insertContactRequest,
-};
+export { fetchFilms, fetchLatestFilms, fetchFilm ,searchFilms, randomFilm };
