@@ -28,9 +28,6 @@ const fetchFilms = async () => {
 
 const fetchLatestFilms = async () => {
   try {
-    // const data =
-    //   await sql`SELECT * FROM films ORDER BY film_releasedate DESC LIMIT 6`;
-    // return data.rows;
     const db = await pool.getConnection();
     const query = "SELECT * FROM films ORDER BY film_release_date DESC LIMIT 6";
     const [rows] = await db.execute(query);
