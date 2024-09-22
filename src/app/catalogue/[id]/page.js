@@ -1,5 +1,5 @@
 import Sidebar from "@/app/components/Sidebar";
-import { fetchFilm } from "@/app/lib/db";
+import { fetchFilm } from "@/app/lib/filmQueries";
 
 // generate dynamic metadata
 export async function generateMetadata({ params }) {

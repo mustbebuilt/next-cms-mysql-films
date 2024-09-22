@@ -1,8 +1,10 @@
 "use client";
 import { useEffect } from "react";
 import Link from "next/link";
+import { logout } from "@/app/lib/auth";
 
-const Navbar = () => {
+const Navbar = (props) => {
+  const isLoggedIn = props.isAuthenticated;
   useEffect(() => {
     const setMenu = () => {
       const burgerMenu = document.querySelector(".burger");
@@ -63,6 +65,17 @@ const Navbar = () => {
               <li>
                 <Link href='/contact'>Contact Us</Link>
               </li>
+              {!isLoggedIn ? (
+                <li>
+                  <Link href='/login'>Login</Link>
+                </li>
+              ) : (
+                <li>
+                  <form action={logout} className='logout'>
+                    <button>Logout</button>
+                  </form>
+                </li>
+              )}
             </menu>
           </nav>
         </div>

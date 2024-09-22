@@ -7,6 +7,7 @@
     --header-colour: #383416;
     --footer-bg-colour: #383416;
     --footer-colour: #fff;
+    --goBtn: #aeff00a9;
 }
 
 body {
@@ -178,6 +179,7 @@ input[type="text"],
 input[type="email"],
 input[type="tel"],
 input[type="number"],
+input[type="password"],
 textarea {
     box-sizing: border-box;
     width: 100%;
@@ -189,6 +191,37 @@ input[type="submit"] {
     text-align: center;
     width: 100%;
     padding: 15px;
+}
+
+form input {
+    padding: 20px;
+    background-color: var(--bg);
+    color: var(--textColor);
+    /* border: none; */
+    border-radius: 5px;
+}
+
+form button {
+    padding: 20px;
+    cursor: pointer;
+    border: none;
+    background-color: var(--goBtn);
+    color: var(--textColor);
+    font-weight: bold;
+    border-radius: 5px;
+}
+form.logout>button{
+    border-radius: 0;
+    background:none;
+    font-weight: bold;
+    text-decoration: none;
+    color: var(--header-colour);
+    padding: 8px 0;
+    font-size:16px;
+}
+.error{
+    color: rgb(206, 50, 50);
+    font-weight: bold;
 }
 
 

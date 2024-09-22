@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { fetchLatestFilms } from "@/app/lib/db";
+import { fetchLatestFilms } from "@/app/lib/filmQueries";
 export default async function Home() {
   const films = await fetchLatestFilms();
   return (

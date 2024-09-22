@@ -1,4 +1,4 @@
-import { randomFilm } from "@/app/lib/db";
+import { randomFilm } from "@/app/lib/filmQueries";
 import Link from "next/link";
 import Image from "next/image";
 

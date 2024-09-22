@@ -47,7 +47,7 @@ header>.div:last-child {
     transition: color 0.5s;
 }
 
-.mainNav>menu>li>a:hover {
+.mainNav>menu>li>a:hover, form.logout>button:hover {
     text-decoration: underline;
     background-color: #fff;
     color: #000;
@@ -112,6 +112,7 @@ header>.div:last-child {
 input[type="text"],
 input[type="email"],
 input[type="tel"],
+input[type="password"],
 textarea {
     width: 400px;
     ;

@@ -9,11 +9,15 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@vercel/postgres": "^0.8.0",
+    "bcryptjs": "^2.4.3",
+    "jose": "^5.2.3",
+    "jsonwebtoken": "^9.0.2",
     "mysql2": "^3.10.3",
+    "net": "^1.0.2",
     "next": "14.2.3",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "tls": "^0.0.1"
   },
   "devDependencies": {
     "eslint": "^8",

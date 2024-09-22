@@ -1,4 +1,4 @@
-import { insertContactRequest } from "@/app/lib/db";
+import { insertContactRequest } from "@/app/lib/filmQueries";
 import Sidebar from "@/app/components/Sidebar";
 export const metadata = {
   title: "Contact Us",
@@ -13,7 +13,7 @@ const Contact = async () => {
       <section className='twoColumn'>
         <div>
           {/* <form onSubmit={handleSubmit}> */}
-          <form action={insertContactRequest}>
+          <form>
             <div>
               <label htmlFor='firstname'>First name</label>
               <input

@@ -1,4 +1,4 @@
-import { fetchFilms, searchFilms } from "@/app/lib/db";
+import { fetchFilms, searchFilms } from "@/app/lib/filmQueries";
 
 export async function GET(req) {
   const { searchParams } = new URL(req.url);

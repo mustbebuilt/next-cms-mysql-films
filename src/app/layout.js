@@ -1,6 +1,6 @@
-import Link from "next/link";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
+import { headers } from "next/headers";
 
 export const metadata = {
   title: "My Film Listing",
@@ -8,6 +8,9 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
+  const sessionHeader = headers().get("x-session-valid");
+  // Check session status from headers
+  const isAuthenticated = sessionHeader === "true";
   return (
     <html lang='en'>
       <head>
@@ -19,7 +22,7 @@ export default function RootLayout({ children }) {
         />
       </head>
       <body>
-        <Navbar />
+        <Navbar isAuthenticated={isAuthenticated} />
         <div className='mainContainer'>{children}</div>
         <Footer />
       </body>
