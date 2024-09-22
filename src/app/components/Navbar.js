@@ -70,11 +70,16 @@ const Navbar = (props) => {
                   <Link href='/login'>Login</Link>
                 </li>
               ) : (
-                <li>
-                  <form action={logout} className='logout'>
-                    <button>Logout</button>
-                  </form>
-                </li>
+                <>
+                  <li>
+                    <Link href='/cms'>CMS</Link>
+                  </li>
+                  <li>
+                    <form action={logout} className='logout'>
+                      <button>Logout</button>
+                    </form>
+                  </li>
+                </>
               )}
             </menu>
           </nav>
