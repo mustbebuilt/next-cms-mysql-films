@@ -1,3 +1,4 @@
+import styles from "./cms.module.css";
 import Link from "next/link";
 import { fetchFilms } from "@/app/lib/filmQueries";
 export const metadata = {
@@ -10,32 +11,35 @@ const Cms = async () => {
   return (
     <main>
       <div className='banner'>
-        <h2>Catalogue</h2>
+        <h2>CMS</h2>
       </div>
       <section className='twoColumn'>
         <div className='listing'>
-          <table>
+          <div>
+            <Link href={"cms/add"}>Add Film</Link>
+          </div>
+          <table className={styles.table}>
             <thead>
               <tr>
                 <th>Film</th>
-                <th>Certificate</th>
-                <th>Price</th>
+                <th>Edit</th>
+                <th>Delete</th>
               </tr>
             </thead>
             <tbody>
               {/* Loop over the films and display them here: */}
               {films.map((film, index) => (
                 <tr key={index}>
-                  <td data-cell='Title' role='cell'>
+                  <td>
                     <Link href={`/catalogue/${film.film_id}`}>
                       {film.film_title}
                     </Link>
                   </td>
-                  <td data-cell='Certificate' role='cell'>
-                    {film.film_certificate}
+                  <td>
+                    <Link href={`cms/edit/${film.film_id}`}>Edit</Link>
                   </td>
-                  <td data-cell='Price' role='cell'>
-                    {film.film_price}
+                  <td>
+                    <Link href={`cms/delete/${film.film_id}`}>Delete</Link>
                   </td>
                 </tr>
               ))}
