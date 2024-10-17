@@ -5,6 +5,7 @@ const key = new TextEncoder().encode(secretKey);
 import bcrypt from "bcryptjs";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 
 const hashPassword = async (password) => {
   const salt = await bcrypt.genSalt(10);
@@ -45,6 +46,8 @@ const logout = async () => {
   // Destroy the session
   console.info("cookie kill");
   cookies().set("session", "", { expires: new Date(0) });
+  const headers = new Headers();
+  headers.delete("x-session-valid"); // Remove the custom header when logging out
   redirect("/");
 };
 

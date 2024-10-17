@@ -43,12 +43,12 @@ const loginUser = async (currentState, formData) => {
   let username = formData.get("username");
   let password = formData.get("password");
   let db;
-  console.error(username, password);
+  console.log(username, password);
   try {
     db = await pool.getConnection();
     const query = "SELECT * FROM users WHERE username = ?";
     const [rows] = await db.execute(query, [username]);
-    // console.dir(rows);
+    console.dir(rows);
     if (rows.length === 0) {
       throw new Error("User not found.");
     }
@@ -63,7 +63,8 @@ const loginUser = async (currentState, formData) => {
     }
     const session = await encrypt({ user });
     // remove on log out
-    cookies().set("session", session, { httpOnly: true, secure: true });
+     // cookies().set("session", session, { httpOnly: true, secure: true });
+   cookies().set("session", session, { httpOnly: true });
     // cookies().set("session", session, { expires, httpOnly: true });
     // no return value on success handled by redirect after the try/catch
     //return { success: true };
