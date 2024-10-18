@@ -5,7 +5,7 @@ const key = new TextEncoder().encode(secretKey);
 import bcrypt from "bcryptjs";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { revalidatePath } from "next/cache";
+import { NextResponse } from "next/server";
 
 const hashPassword = async (password) => {
   const salt = await bcrypt.genSalt(10);
@@ -33,8 +33,10 @@ const encrypt = async (payload) => {
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
     .setExpirationTime("1 hour from now")
+    //.setExpirationTime("10 sec from now")
     .sign(key);
 };
+
 const decrypt = async (input) => {
   const { payload } = await jwtVerify(input, key, {
     algorithms: ["HS256"],
@@ -57,7 +59,10 @@ const updateSession = async (request) => {
 
   // Refresh the session so it doesn't expire
   const parsed = await decrypt(session);
-  parsed.expires = new Date(Date.now() + 10 * 10000);
+  // ten seconds from now
+  // parsed.expires = new Date(Date.now() + 10 * 10000);
+  // one hour from now
+  parsed.expires = new Date(Date.now() + 60 * 60 * 1000);
   const res = NextResponse.next();
   res.cookies.set({
     name: "session",

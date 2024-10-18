@@ -1,14 +1,14 @@
 import { NextResponse } from "next/server";
-import { verifyJwtToken } from "./app/lib/auth";
+import { updateSession, verifyJwtToken } from "./app/lib/auth";
 
 // Define paths that require authentication
-  const protectedPaths = ["/cms"];
+const protectedPaths = ["/cms"];
 // const protectedPaths = [];
 
 export async function middleware(req) {
   const { pathname } = req.nextUrl;
 
-   // Check if the current path is a protected path
+  // Check if the current path is a protected path
   if (protectedPaths.some((path) => pathname.startsWith(path))) {
     const token = req.cookies.get("session");
     console.dir(token);
@@ -24,7 +24,9 @@ export async function middleware(req) {
 
     if (hasVerifiedToken) {
       // If authenticated, pass session information as a request header
-      const response = NextResponse.next();
+      // const response = NextResponse.next();
+      // update cookie time
+      const response = await updateSession(req);
       response.headers.set("x-session-valid", "true"); // Custom header
       return response;
       //return NextResponse.next(); // Token is valid, continue
