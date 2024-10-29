@@ -73,6 +73,13 @@ const updateSession = async (request) => {
   return res;
 };
 
+const getSession = async () => {
+  const session = cookies().get("session")?.value;
+  console.info("Session: " + session);
+  if (!session) return null;
+  return await decrypt(session);
+};
+
 export {
   hashPassword,
   verifyPassword,
@@ -81,4 +88,5 @@ export {
   decrypt,
   logout,
   updateSession,
+  getSession,
 };

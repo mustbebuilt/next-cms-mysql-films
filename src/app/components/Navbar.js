@@ -1,88 +1,21 @@
-"use client";
-import { useEffect } from "react";
+// "use client";
+// import { useEffect } from "react";
 import Link from "next/link";
-import { logout } from "@/app/lib/auth";
+import { logout, getSession } from "@/app/lib/auth";
+import BurgerMenu from "./BurgerMenu";
 
-const Navbar = (props) => {
+const Navbar = async (props) => {
   const isLoggedIn = props.isAuthenticated;
-  useEffect(() => {
-    const setMenu = () => {
-      const burgerMenu = document.querySelector(".burger");
-      const navBar = document.querySelector("nav");
-      let navBarStatus = false;
-
-      if (navBar.style.left === "") {
-        burgerMenu.addEventListener("click", () => {
-          if (navBarStatus) {
-            navBarStatus = false;
-            navBar.removeAttribute("style");
-            burgerMenu.classList.remove("changeBurger");
-          } else {
-            navBarStatus = true;
-            navBar.style.left = "0px";
-            burgerMenu.classList.add("changeBurger");
-          }
-        });
-      } else {
-        navBarStatus = false;
-        navBar.removeAttribute("style");
-      }
-    };
-
-    setMenu();
-    window.addEventListener("resize", setMenu);
-
-    return () => {
-      window.removeEventListener("resize", setMenu);
-    };
-  }, []);
+  const session = await getSession();
+  // console.log("mySession: ", session.user.username);
+  const username = session.user.username;
 
   return (
     <div className='headerContainer'>
       <header>
         <div className='topBar'>
-          <div>
-            <h1>SHU Films</h1>
-          </div>
-          <div className='burger'>
-            <div className='line'></div>
-            <div className='line'></div>
-            <div className='line'></div>
-          </div>
-        </div>
-        <div>
-          <nav className='mainNav'>
-            <menu>
-              <li>
-                <Link href='/'>Home</Link>
-              </li>
-              <li>
-                <Link href='/catalogue'>Catalogue</Link>
-              </li>
-              <li>
-                <Link href='/search'>Search</Link>
-              </li>
-              <li>
-                <Link href='/contact'>Contact Us</Link>
-              </li>
-              {!isLoggedIn ? (
-                <li>
-                  <Link href='/login'>Login</Link>
-                </li>
-              ) : (
-                <>
-                  <li>
-                    <Link href='/cms'>CMS</Link>
-                  </li>
-                  <li>
-                    <form action={logout} className='logout'>
-                      <button>Logout</button>
-                    </form>
-                  </li>
-                </>
-              )}
-            </menu>
-          </nav>
+          <h1>SHU Films</h1>
+          <BurgerMenu isLoggedIn={props.isAuthenticated} username={username} />
         </div>
       </header>
     </div>
